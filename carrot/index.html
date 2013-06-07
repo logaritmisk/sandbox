@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Carrot</title>
+  <style>
+  body {
+    margin: 0;
+  }
+  </style>
+</head>
+<body>
+  <script>
+  window.addEventListener('load', init);
+
+  var TO_RADIANS = Math.PI / 180;
+
+  var canvas = document.createElement('canvas');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  document.body.appendChild(canvas);
+
+  var context = canvas.getContext('2d');
+
+  var image = new Image();
+  image.src = 'img/carrot.png'
+
+  function init() {
+    setInterval(loop, 1000 / 30);
+  }
+
+  var carrots = [];
+
+  function loop() {
+    try {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (i = 0; i < 2; i++) {
+        carrots.push({
+          x: Math.random() * canvas.width,
+          y: (Math.random() * canvas.height) * -1,
+          a: Math.random() * 360.0
+        });
+      }
+
+      for (i = 0; i < carrots.length; i++) {
+        carrot = carrots[i];
+
+        carrot.a += 1.0;
+        if (carrot.a >= 360.0) {
+          carrot.a = 0.0;
+        }
+
+        carrot.y += 1.8;
+        carrot.x += Math.random() * 2 - 1;
+
+        context.save();
+        context.translate(carrot.x, carrot.y);
+        context.rotate(carrot.a * TO_RADIANS);
+        context.drawImage(image, -15, -15, 30, 30);
+        context.restore();
+
+        if (carrot.y - 15 > canvas.height) {
+          carrots.splice(i, 1);
+        }
+      }
+    }
+    catch(err) {
+      console.log(err);
+      console.trace();
+    }
+  }
+  </script>
+</body>
+</html>
